@@ -479,6 +479,63 @@ void MyMesh::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int a_nSu
 
 	for (uint x = 0; x < a_nSubdivisionsB; x++)
 	{
+		float xCoor = tubeCenter.x + (glm::cos(phi + (phi * x)) * (smallRadius));
+		float yCoor = tubeCenter.y + (glm::sin(phi + (phi * x)) * (smallRadius));
+		float zCoor = tubeCenter.z;
+
+		initialPoints.push_back(vector3(xCoor, yCoor, zCoor));
+	}
+
+	for (uint x = 0; x < initialPoints.size(); x++)
+	{
+		if (x != initialPoints.size() - 1)
+		{
+			AddTri(tubeCenter, initialPoints[x], initialPoints[x + 1]);
+		}
+		else
+		{
+			AddTri(tubeCenter, initialPoints[x], initialPoints[0]);
+		}
+	}
+
+	initialPoints.clear();
+
+
+
+	//AddTri(tubeCenter, vector3(0.0f, .5f, 0.0f), vector3(0.0f, 0.0f, 0.0f));
+
+	for (uint y = 0; y < a_nSubdivisionsA; y++)
+	{
+		tubeCenter.x = glm::cos(theta + (theta * y)) * (a_fInnerRadius + smallRadius);
+		tubeCenter.z = glm::sin(theta + (theta * y)) * (a_fInnerRadius + smallRadius);
+
+		for (uint x = 0; x < a_nSubdivisionsB; x++)
+		{
+			float xCoor = tubeCenter.x + ((smallRadius * glm::cos(phi + (phi * x))));//(tubeCenter.x + (glm::cos(phi + (phi * x)) * (smallRadius))) * glm::sin(theta);
+			float yCoor = tubeCenter.y + (glm::sin(phi + (phi * x)) * (smallRadius));
+			float zCoor = tubeCenter.z + ((smallRadius * glm::cos(phi + (phi * x))));//tubeCenter.z + (glm::sin(theta + (theta * x)) * glm::cos(theta));
+
+			initialPoints.push_back(vector3(xCoor, yCoor, zCoor));
+		}
+
+		for (uint x = 0; x < initialPoints.size(); x++)
+		{
+			if (x != initialPoints.size() - 1)
+			{
+				AddTri(tubeCenter, initialPoints[x], initialPoints[x + 1]);
+			}
+			else
+			{
+				AddTri(tubeCenter, initialPoints[x], initialPoints[0]);
+			}
+		}
+	}
+
+
+
+	/*
+	for (uint x = 0; x < a_nSubdivisionsB; x++)
+	{
 
 		float xCoor = tubeCenter.x + (glm::cos(phi + (phi * x)) * (smallRadius));
 		float yCoor = tubeCenter.y + (glm::sin(phi + (phi * x)) * (smallRadius));
@@ -498,6 +555,7 @@ void MyMesh::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int a_nSu
 			AddTri(tubeCenter, initialPoints[x], initialPoints[0]);
 		}
 	}
+	*/
 	// -------------------------------
 
 	// Adding information about color
