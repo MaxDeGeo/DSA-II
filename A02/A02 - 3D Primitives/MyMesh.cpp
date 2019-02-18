@@ -519,7 +519,6 @@ void MyMesh::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int a_nSu
 			AddTri(tubeCenter, nextPoints[x], nextPoints[0]);
 		}
 	}
-
 	// -------------------------------
 
 	// Adding information about color
@@ -544,28 +543,12 @@ void MyMesh::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a_v3Co
 	Init();
 
 	// Replace this with your code
-	float theta = glm::radians(360.0f / a_nSubdivisions);
-	vector3 topPoint = vector3(0.0f, 0.0f + a_fRadius, 0.0f);
-
-	vector3 bottomPoint = vector3(0.0f, 0.0f - a_fRadius, 0.0f);
-
-	vector3 initialPoint = vector3(a_fRadius, 0.0f, 0.0f);
-	vector3 nextPoint = vector3(0.0f, 0.0f, 0.0f);
-	//vector3 nextPoint = vector3(glm::cos(theta + (theta * 0)) * a_fRadius, 0.0f, glm::sin(theta + (theta * 0)) * a_fRadius);
-
-	//AddTri(initialPoint, topPoint, nextPoint);
-	
-	for (uint x = 0; x < a_nSubdivisions; x++)
-	{
-		nextPoint.x = glm::cos(theta + (theta * x)) * a_fRadius;
-		nextPoint.z = glm::sin(theta + (theta * x)) * a_fRadius;
-
-		AddTri(initialPoint, topPoint, nextPoint);
-		AddTri(initialPoint, nextPoint, bottomPoint);
+	float theta = 0; // glm::radians(360.0f / a_nSubdivisions);
+	float phi = 0;
 
 		//NEED TO DO THIS RECURSIVELY
-		AddTri((initialPoint + topPoint) / 2, (topPoint + nextPoint) / 2, (nextPoint + initialPoint) / 2);
-		AddTri((initialPoint + nextPoint) / 2, (nextPoint + bottomPoint) / 2, (bottomPoint + initialPoint) / 2);
+		//AddTri((initialPoint + topPoint) / 2, (topPoint + nextPoint) / 2, (nextPoint + initialPoint) / 2);
+		//AddTri((initialPoint + nextPoint) / 2, (nextPoint + bottomPoint) / 2, (bottomPoint + initialPoint) / 2);
 
 		//AddTri((initialPoint + topPoint) / 4, ((topPoint + nextPoint) / 4), (nextPoint + initialPoint) / 4);
 		//AddTri(topPoint, (topPoint + nextPoint) / 4, initialPoint);
@@ -578,9 +561,7 @@ void MyMesh::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a_v3Co
 		AddTri(bottomPoint, (bottomPoint + initialPoint) / 4, nextPoint);
 		AddTri(((initialPoint + nextPoint) / 2) / 4, ((nextPoint + bottomPoint) / 2) / 4, ((bottomPoint + initialPoint) / 2) / 4);
 		*/
-		initialPoint = nextPoint;
-
-	}
+		//initialPoint = nextPoint;
 	// -------------------------------
 
 	// Adding information about color
