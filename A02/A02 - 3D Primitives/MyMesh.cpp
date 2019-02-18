@@ -498,27 +498,6 @@ void MyMesh::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int a_nSu
 			AddTri(tubeCenter, initialPoints[x], initialPoints[0]);
 		}
 	}
-
-	for (uint x = 0; x < a_nSubdivisionsB; x++)
-	{
-		float xCoor = initialPoints[x].x * glm::cos(glm::radians(30.0f));
-		float yCoor = initialPoints[x].y;
-		float zCoor = initialPoints[x].z * glm::sin(glm::radians(30.0f));
-
-		nextPoints.push_back(vector3(xCoor, yCoor, zCoor));
-	}
-
-	for (uint x = 0; x < nextPoints.size(); x++)
-	{
-		if (x != nextPoints.size() - 1)
-		{
-			AddTri(tubeCenter, nextPoints[x], nextPoints[x + 1]);
-		}
-		else
-		{
-			AddTri(tubeCenter, nextPoints[x], nextPoints[0]);
-		}
-	}
 	// -------------------------------
 
 	// Adding information about color
