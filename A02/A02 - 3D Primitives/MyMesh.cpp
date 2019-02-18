@@ -467,7 +467,59 @@ void MyMesh::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int a_nSu
 	Init();
 
 	// Replace this with your code
-	GenerateCube(a_fOuterRadius * 2.0f, a_v3Color);
+	float theta = glm::radians(360.0f / a_nSubdivisionsA);
+	float phi = glm::radians(360.0f / a_nSubdivisionsB);
+	float smallRadius = a_fOuterRadius - a_fInnerRadius / 2;
+
+	vector3 tubeCenter = vector3(0.0f + a_fInnerRadius + smallRadius, 0.0, 0.0);
+
+	std::vector<vector3> initialPoints;
+
+	std::vector<vector3> nextPoints;
+
+	for (uint x = 0; x < a_nSubdivisionsB; x++)
+	{
+
+		float xCoor = tubeCenter.x + (glm::cos(phi + (phi * x)) * (smallRadius));
+		float yCoor = tubeCenter.y + (glm::sin(phi + (phi * x)) * (smallRadius));
+		float zCoor = 0.0f;
+
+		initialPoints.push_back(vector3(xCoor, yCoor, zCoor));
+	}
+
+	for (uint x = 0; x < initialPoints.size(); x++)
+	{
+		if (x != initialPoints.size() - 1)
+		{
+			AddTri(tubeCenter, initialPoints[x], initialPoints[x + 1]);
+		}
+		else
+		{
+			AddTri(tubeCenter, initialPoints[x], initialPoints[0]);
+		}
+	}
+
+	for (uint x = 0; x < a_nSubdivisionsB; x++)
+	{
+		float xCoor = initialPoints[x].x * glm::cos(glm::radians(30.0f));
+		float yCoor = initialPoints[x].y;
+		float zCoor = initialPoints[x].z * glm::sin(glm::radians(30.0f));
+
+		nextPoints.push_back(vector3(xCoor, yCoor, zCoor));
+	}
+
+	for (uint x = 0; x < nextPoints.size(); x++)
+	{
+		if (x != nextPoints.size() - 1)
+		{
+			AddTri(tubeCenter, nextPoints[x], nextPoints[x + 1]);
+		}
+		else
+		{
+			AddTri(tubeCenter, nextPoints[x], nextPoints[0]);
+		}
+	}
+
 	// -------------------------------
 
 	// Adding information about color
@@ -510,7 +562,6 @@ void MyMesh::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a_v3Co
 
 		AddTri(initialPoint, topPoint, nextPoint);
 		AddTri(initialPoint, nextPoint, bottomPoint);
-
 
 		//NEED TO DO THIS RECURSIVELY
 		AddTri((initialPoint + topPoint) / 2, (topPoint + nextPoint) / 2, (nextPoint + initialPoint) / 2);
