@@ -467,6 +467,7 @@ void MyMesh::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int a_nSu
 	Init();
 
 	// Replace this with your code
+	/*
 	float theta = glm::radians(360.0f / a_nSubdivisionsA);
 	float phi = glm::radians(360.0f / a_nSubdivisionsB);
 	float smallRadius = a_fOuterRadius - a_fInnerRadius / 2;
@@ -532,7 +533,7 @@ void MyMesh::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int a_nSu
 	}
 
 
-
+	*/
 	/*
 	for (uint x = 0; x < a_nSubdivisionsB; x++)
 	{
@@ -580,27 +581,41 @@ void MyMesh::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a_v3Co
 	Init();
 
 	// Replace this with your code
-	float theta = 0; // glm::radians(360.0f / a_nSubdivisions);
-	float phi = 0;
+	std::vector<vector3> vertices;
+	float x, y, z, xy;                              // vertex position
+	float sectorAngle, stackAngle;
 
-		//NEED TO DO THIS RECURSIVELY
-		//AddTri((initialPoint + topPoint) / 2, (topPoint + nextPoint) / 2, (nextPoint + initialPoint) / 2);
-		//AddTri((initialPoint + nextPoint) / 2, (nextPoint + bottomPoint) / 2, (bottomPoint + initialPoint) / 2);
+	for (int i = 0; i <= a_nSubdivisions; ++i)
+	{
+		stackAngle = PI / 2 - i * a_nSubdivisions;        // starting from pi/2 to -pi/2
+		xy = a_fRadius * glm::cos(stackAngle);             // r * cos(u)
+		z = a_fRadius * glm::sin(stackAngle);              // r * sin(u)
 
-		//AddTri((initialPoint + topPoint) / 4, ((topPoint + nextPoint) / 4), (nextPoint + initialPoint) / 4);
-		//AddTri(topPoint, (topPoint + nextPoint) / 4, initialPoint);
-		//AddTri(nextPoint, (nextPoint + initialPoint) / 4, topPoint);
-		//AddTri(((initialPoint + topPoint) / 2) / 4, ((topPoint + nextPoint) / 2) / 4, ((nextPoint + initialPoint) / 2) / 4);
-		
-		/*
-		AddTri(initialPoint, (initialPoint + nextPoint) / 4, bottomPoint);
-		AddTri(nextPoint, (nextPoint + bottomPoint) / 4, initialPoint);
-		AddTri(bottomPoint, (bottomPoint + initialPoint) / 4, nextPoint);
-		AddTri(((initialPoint + nextPoint) / 2) / 4, ((nextPoint + bottomPoint) / 2) / 4, ((bottomPoint + initialPoint) / 2) / 4);
-		*/
-		//initialPoint = nextPoint;
+		// add (sectorCount+1) vertices per stack
+		// the first and last vertices have same position and normal, but different tex coords
+		for (int j = 0; j <= a_nSubdivisions; ++j)
+		{
+			sectorAngle = j * a_nSubdivisions;           // starting from 0 to 2pi
+
+			// vertex position (x, y, z)
+			x = xy * glm::cos(sectorAngle);             // r * cos(u) * cos(v)
+			y = xy * glm::sin(sectorAngle);
+			vertices.push_back(vector3(x, y, z));
+		}
+	}
+
+	std::cout << vertices.size() << std::endl;
+
+	for (uint x = 0; x < vertices.size(); x++)
+	{
+		if (x < vertices.size() - 2)
+		{
+
+			AddTri(vertices[x], vertices[x + 1], vertices[x + 2]);
+		}
+	}
+
 	// -------------------------------
-
 	// Adding information about color
 	CompleteMesh(a_v3Color);
 	CompileOpenGL3X();
